@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nimble Learn · Carousel mock</title>
+  <title>Nimble Learn · Benefits carousel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -11,250 +11,742 @@
     rel="stylesheet"
   />
   <style>
-    /*
-      Brand tokens carried over from the nb-cookie project so the carousel
-      matches nimblelearn.com (Inter, NL blue #3272B8, near-black CTA, 4px radii).
-    */
     :root {
-      --page-bg: #f0f5f9;
-      --page-ink: #080808;
-      --page-muted: #717171;
-      --page-accent: #3272b8;
-      --carousel-radius: 12px;
-      --btn-radius: 4px;
+      --page-bg: #ffffff;
+      --card-bg: #efefef;
+      --ink: #0a0a0a;
+      --muted: #8a8a8a;
+      --accent: #3272b8;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--page-bg);
-      color: var(--page-ink);
-      line-height: 1.55;
+      color: var(--ink);
       min-height: 100vh;
-      padding: 4rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    .page {
-      max-width: 960px;
-      margin: 0 auto;
+    .panel {
+      width: 100%;
+      max-width: 1180px;
+      padding: 4rem 2rem 3rem;
     }
 
-    .page__title {
-      font-size: clamp(1.75rem, 4vw, 2.35rem);
+    /* ── Dev bar (mock controls, top-right) ─────────────────────── */
+    .dev-bar {
+      position: fixed;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      align-items: stretch;
+      max-width: 12rem;
+      font-size: 0.75rem;
+    }
+
+    .dev-bar__group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid rgba(8, 8, 8, 0.18);
+      background: #fff;
+      box-shadow: 0 4px 14px rgba(8, 8, 8, 0.06);
+    }
+
+    .dev-bar__label {
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      font-weight: 500;
+    }
+
+    .dev-bar__option {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(8, 8, 8, 0.18);
+      background: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--ink);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .dev-bar__option:hover:not(.is-active) {
+      background: rgba(8, 8, 8, 0.05);
+    }
+
+    .dev-bar__option.is-active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .panel__title {
+      font-size: clamp(1.6rem, 3vw, 2rem);
       font-weight: 700;
-      letter-spacing: -0.02em;
-      margin: 0 0 0.5rem;
-    }
-
-    .page__lede {
-      color: var(--page-muted);
-      margin: 0 0 2.5rem;
+      letter-spacing: -0.01em;
+      text-align: center;
+      margin: 0 0 0.25rem;
     }
 
     /* ── Carousel ───────────────────────────────────────────────── */
-    .carousel {
-      position: relative;
-    }
+    .carousel { position: relative; }
 
     .carousel__viewport {
-      overflow: hidden;
-      border-radius: var(--carousel-radius);
-      background: #fff;
-      box-shadow: 0 12px 32px rgba(8, 8, 8, 0.08);
+      overflow-x: clip;
+      overflow-y: visible;
+      padding: 2.5rem 0;
     }
 
     .carousel__track {
       display: flex;
-      transition: transform 0.4s ease;
+      gap: 1.5rem;
+      transition: transform 0.7s var(--ease);
       will-change: transform;
     }
 
-    .carousel__slide {
-      flex: 0 0 100%;
-      padding: 4rem 3rem;
-      text-align: center;
-    }
-
-    .carousel__slide-icon {
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 1.25rem;
-      color: var(--page-accent);
-    }
-
-    .carousel__slide h2 {
-      margin: 0 0 0.75rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .carousel__slide p {
-      margin: 0 auto;
-      max-width: 32rem;
-      color: var(--page-muted);
-    }
-
-    .carousel__nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1.25rem;
-    }
-
-    .carousel__btn {
-      background: #fff;
-      color: var(--page-ink);
-      border: 1px solid var(--page-ink);
-      border-radius: var(--btn-radius);
-      font-family: inherit;
-      font-weight: 500;
-      font-size: 0.9rem;
-      padding: 0.6rem 1.1rem;
+    .card {
+      flex: 0 0 auto;
+      width: clamp(240px, 28vw, 320px);
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 0.75rem;
+      opacity: 0.28;
+      transform: scale(0.84);
+      transition:
+        opacity 0.7s var(--ease),
+        transform 0.7s var(--ease),
+        box-shadow 0.7s var(--ease);
       cursor: pointer;
-      transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
     }
 
-    .carousel__btn:hover:not(:disabled) {
-      background: var(--page-ink);
+    .card.is-active {
+      opacity: 1;
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px -4px rgba(8, 8, 8, 0.14);
+      cursor: default;
+    }
+
+    .card.is-adjacent {
+      opacity: 0.5;
+    }
+
+    .card__image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+      background: linear-gradient(135deg, #b3d4f5, #6da7e0);
+    }
+
+    .card__body {
+      padding: 1.1rem 0.5rem 0.5rem;
+    }
+
+    .card__date {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 0.6rem;
+      font-weight: 500;
+    }
+
+    .card__title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .card__check {
+      flex: 0 0 auto;
+      width: 16px;
+      height: 16px;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .card__title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.4;
+      margin: 0;
+      color: var(--muted);
+      transition: color 0.7s var(--ease), font-weight 0s;
+    }
+
+    .card.is-active .card__title {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Track drag ─────────────────────────────────────────────── */
+    .carousel__track {
+      cursor: grab;
+      touch-action: pan-y; /* allow vertical scroll, capture horizontal */
+      user-select: none;
+    }
+    .carousel__track.is-dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+    .carousel__track.is-dragging .card {
+      transition: none;
+    }
+    .carousel__track.is-dragging img { pointer-events: none; }
+
+    /* ── Controls (arrows + dots) ───────────────────────────────── */
+    .carousel__controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.85rem;
+      margin-top: 2rem;
+    }
+
+    .carousel__arrow {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid rgba(8, 8, 8, 0.2);
+      color: var(--ink);
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s var(--ease), color 0.2s var(--ease),
+                  border-color 0.2s var(--ease), opacity 0.2s var(--ease);
+    }
+
+    .carousel__arrow:hover:not(:disabled) {
+      background: var(--ink);
       color: #fff;
+      border-color: var(--ink);
     }
 
-    .carousel__btn:disabled {
-      opacity: 0.3;
+    .carousel__arrow:disabled {
+      opacity: 0.25;
       cursor: not-allowed;
     }
 
-    .carousel__btn:focus-visible {
-      outline: 2px solid var(--page-accent);
-      outline-offset: 2px;
+    .carousel__arrow:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .carousel__arrow svg {
+      width: 14px;
+      height: 14px;
     }
 
     .carousel__dots {
       display: flex;
-      gap: 0.4rem;
+      justify-content: center;
+      gap: 0.5rem;
     }
 
     .carousel__dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      background: rgba(8, 8, 8, 0.18);
+      background: rgba(8, 8, 8, 0.2);
       border: none;
       padding: 0;
       cursor: pointer;
-      transition: width 0.2s ease, background 0.2s ease;
+      transition: width 0.4s var(--ease), background 0.4s var(--ease);
     }
 
     .carousel__dot.is-active {
-      background: var(--page-accent);
+      background: var(--ink);
       width: 24px;
     }
 
     .carousel__dot:focus-visible {
-      outline: 2px solid var(--page-accent);
-      outline-offset: 2px;
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
 
-    @media (max-width: 560px) {
-      body { padding: 2rem 1rem; }
-      .carousel__slide { padding: 2.5rem 1.5rem; }
+    /* ── Bullet sections (Why this matters / Why us) ────────────── */
+    .bullets {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .bullets__title {
+      font-size: clamp(1.5rem, 2.6vw, 1.85rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0 0 1rem;
+    }
+
+    .bullets__list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .bullets__item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 1rem;
+      align-items: start;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid rgba(8, 8, 8, 0.08);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .bullets__item:last-child { border-bottom: none; }
+
+    .bullets__check {
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .bullets a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .bullets a:hover { text-decoration: underline; }
+
+    .panel__rule {
+      max-width: 760px;
+      margin: 3.5rem auto;
+      border: 0;
+      border-top: 1px solid rgba(8, 8, 8, 0.08);
+    }
+
+    .benefits-block[hidden] { display: none; }
+
+    /* When the benefits block is hidden, give the two bullet sections
+       breathing room so they don't sit flush against each other. */
+    .benefits-block[hidden] + .bullets { margin-top: 5.5rem; }
+
+    /* ── Mobile viewport mode (forced via dev bar) ──────────────── */
+    .panel[data-viewport="mobile"] {
+      max-width: 390px;
+      padding: 2.5rem 1rem 2rem;
+      border-left: 1px dashed rgba(8, 8, 8, 0.12);
+      border-right: 1px dashed rgba(8, 8, 8, 0.12);
+    }
+
+    .panel[data-viewport="mobile"] .carousel__track {
+      gap: 1rem;
+    }
+
+    .panel[data-viewport="mobile"] .card {
+      width: 78vw;
+      max-width: 290px;
+    }
+    .panel[data-viewport="mobile"] .card.is-active {
+      transform: scale(1.04);
+    }
+    .panel[data-viewport="mobile"] .carousel__arrow {
+      display: none;
+    }
+
+    /* Honest mobile breakpoint (still useful for real devices) */
+    @media (max-width: 720px) {
+      .panel:not([data-viewport]) { padding: 2.5rem 1rem 2rem; }
+      .panel:not([data-viewport]) .card { width: 70vw; }
+    }
+
+    /* Screen-reader-only live region for slide announcements */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .carousel__track,
+      .card,
+      .carousel__dot,
+      .card__title { transition-duration: 0s; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <h1 class="page__title">Nimble Learn services</h1>
-    <p class="page__lede">A small carousel mock — three slides, prev/next + dots.</p>
+  <aside class="dev-bar" aria-label="Mock controls">
+    <div class="dev-bar__group" role="radiogroup" aria-label="Slide count">
+      <span class="dev-bar__label">Slides</span>
+      <button type="button" class="dev-bar__option" data-count="0" role="radio" aria-checked="false">0 (hidden)</button>
+      <button type="button" class="dev-bar__option is-active" data-count="3" role="radio" aria-checked="true">3</button>
+      <button type="button" class="dev-bar__option" data-count="10" role="radio" aria-checked="false">10</button>
+    </div>
+    <div class="dev-bar__group" role="radiogroup" aria-label="Viewport">
+      <span class="dev-bar__label">Viewport</span>
+      <button type="button" class="dev-bar__option is-active" data-viewport="desktop" role="radio" aria-checked="true">Desktop</button>
+      <button type="button" class="dev-bar__option" data-viewport="mobile" role="radio" aria-checked="false">Mobile</button>
+    </div>
+  </aside>
 
-    <section
-      class="carousel"
-      id="carousel"
-      aria-roledescription="carousel"
-      aria-label="Nimble Learn services"
-    >
-      <div class="carousel__viewport">
-        <div class="carousel__track" id="track">
-          <article class="carousel__slide" aria-roledescription="slide" aria-label="1 of 3">
-            <svg class="carousel__slide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 2" stroke-linecap="round" />
-            </svg>
-            <h2>Accelerate your projects</h2>
-            <p>We work with you to accelerate your analytics and AI projects and shorten time-to-value.</p>
-          </article>
-          <article class="carousel__slide" aria-roledescription="slide" aria-label="2 of 3">
-            <svg class="carousel__slide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M3 17l6-6 4 4 8-8" stroke-linecap="round" stroke-linejoin="round" />
-              <path d="M14 7h7v7" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <h2>Upskill your teams</h2>
-            <p>We upskill your teams to develop and enhance your in-house analytics and AI capability.</p>
-          </article>
-          <article class="carousel__slide" aria-roledescription="slide" aria-label="3 of 3">
-            <svg class="carousel__slide-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke-linejoin="round" />
-            </svg>
-            <h2>Protect your investment</h2>
-            <p>We keep your solutions in peak performance and provide data strategy guidance.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="carousel__nav">
-        <button type="button" class="carousel__btn" id="prev" aria-label="Previous slide">← Prev</button>
-        <div class="carousel__dots" id="dots" role="tablist" aria-label="Slide indicators">
-          <button type="button" class="carousel__dot is-active" data-i="0" aria-label="Go to slide 1"></button>
-          <button type="button" class="carousel__dot" data-i="1" aria-label="Go to slide 2"></button>
-          <button type="button" class="carousel__dot" data-i="2" aria-label="Go to slide 3"></button>
-        </div>
-        <button type="button" class="carousel__btn" id="next" aria-label="Next slide">Next →</button>
-      </div>
+  <main class="panel" id="panel" data-viewport="desktop">
+    <p class="sr-only" aria-live="polite" id="live"></p>
+    <section class="bullets" aria-labelledby="why-matters">
+      <h2 class="bullets__title" id="why-matters">Why this matters:</h2>
+      <ul class="bullets__list">
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Objectively assess whether Power BI can fulfil your needs</span>
+        </li>
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Get first-hand experience of how well our delivery method works for you</span>
+        </li>
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Take the first step towards unlocking new growth opportunities</span>
+        </li>
+      </ul>
     </section>
-  </div>
+
+    <div class="benefits-block" id="benefits-block">
+      <hr class="panel__rule" />
+
+      <h1 class="panel__title">What's included</h1>
+
+      <section
+        class="carousel"
+        id="carousel"
+        aria-roledescription="carousel"
+        aria-label="Power BI report offer — benefits"
+      >
+        <div class="carousel__viewport" id="viewport">
+          <div class="carousel__track" id="track" role="list"></div>
+        </div>
+        <div class="carousel__controls">
+          <button type="button" class="carousel__arrow" id="prev" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+          </button>
+          <div class="carousel__dots" id="dots" role="group" aria-label="Slide indicators"></div>
+          <button type="button" class="carousel__arrow" id="next" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+          </button>
+        </div>
+      </section>
+
+      <hr class="panel__rule" />
+    </div>
+
+    <section class="bullets" aria-labelledby="why-us">
+      <h2 class="bullets__title" id="why-us">Why us?</h2>
+      <ul class="bullets__list">
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Microsoft Partner with Cyber Essentials Plus and ISO 9001 <a href="#">certifications</a></span>
+        </li>
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Proven <a href="#">track record</a> for delivering high-quality solutions</span>
+        </li>
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span><a href="#">Flexible team</a> of analytics and AI experts and project managers</span>
+        </li>
+        <li class="bullets__item">
+          <svg class="bullets__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>
+          <span>Extensive <a href="#">knowledge and expertise</a> relating to analytics and AI</span>
+        </li>
+      </ul>
+    </section>
+  </main>
 
   <script>
     (function () {
-      var track = document.getElementById("track");
-      var slides = track.querySelectorAll(".carousel__slide");
-      var prev = document.getElementById("prev");
-      var next = document.getElementById("next");
-      var dots = document.querySelectorAll(".carousel__dot");
-      var carousel = document.getElementById("carousel");
-      var i = 0;
-      var max = slides.length - 1;
+      // Benefits drawn from nimblelearn.com/power-bi-report-offer.
+      // Imagery sourced from Unsplash (analytics / dashboards / teamwork).
+      var IMG = "https://images.unsplash.com/photo-";
+      var Q = "?w=720&h=400&fit=crop&q=80";
+      var ALL_CARDS = [
+        {
+          tag: "WORKSHOP",
+          title: "Wireframe your report design in a collaborative workshop",
+          img: IMG + "1551434678-e076c223a692" + Q
+        },
+        {
+          tag: "DELIVERY",
+          title: "A Power BI report built with your branding and live data",
+          img: IMG + "1551288049-bebda4e38f71" + Q
+        },
+        {
+          tag: "DEMO",
+          title: "A guided demo walking you through every insight",
+          img: IMG + "1542744173-8e7e53415bb0" + Q
+        },
+        {
+          tag: "AI BONUS",
+          title: "An AI data agent proof-of-concept for natural-language questions",
+          img: IMG + "1611224923853-80b023f02d71" + Q
+        },
+        {
+          tag: "SUPPORT",
+          title: "One month of direct expert support — a £225 value, on us",
+          img: IMG + "1556761175-b413da4baf72" + Q
+        },
+        {
+          tag: "RISK-FREE",
+          title: "Evaluate Power BI for your business with zero commitment",
+          img: IMG + "1554224155-6726b3ff858f" + Q
+        },
+        {
+          tag: "TIMELINE",
+          title: "Response within 48 hours, proposal within 5 business days",
+          img: IMG + "1543286386-713bdd548da4" + Q
+        },
+        {
+          tag: "ELIGIBILITY",
+          title: "Tailored for businesses with 50–500 employees",
+          img: IMG + "1559136555-9303baea8ebd" + Q
+        },
+        {
+          tag: "AVAILABILITY",
+          title: "Limited slots this quarter — secure yours before they go",
+          img: IMG + "1606857521015-7f9fcf423740" + Q
+        },
+        {
+          tag: "GROWTH",
+          title: "Open new growth paths through better business intelligence",
+          img: IMG + "1460925895917-afdab827c52f" + Q
+        }
+      ];
 
-      function go(n) {
-        i = Math.max(0, Math.min(max, n));
-        track.style.transform = "translateX(" + (-i * 100) + "%)";
-        dots.forEach(function (d, idx) {
-          d.classList.toggle("is-active", idx === i);
+      var track = document.getElementById("track");
+      var dotsEl = document.getElementById("dots");
+      var viewport = document.getElementById("viewport");
+      var carousel = document.getElementById("carousel");
+      var block = document.getElementById("benefits-block");
+      var panel = document.getElementById("panel");
+      var live = document.getElementById("live");
+      var slideOptions = document.querySelectorAll(".dev-bar__option[data-count]");
+      var viewportOptions = document.querySelectorAll(".dev-bar__option[data-viewport]");
+      var prevBtn = document.getElementById("prev");
+      var nextBtn = document.getElementById("next");
+
+      var slideCount = 3;
+      var active = 0;
+      var cards = [];
+      var dots = [];
+
+      function build() {
+        track.innerHTML = "";
+        dotsEl.innerHTML = "";
+
+        var data = ALL_CARDS.slice(0, slideCount);
+
+        data.forEach(function (c, i) {
+          var article = document.createElement("article");
+          article.className = "card";
+          article.setAttribute("role", "listitem");
+          article.setAttribute("aria-roledescription", "slide");
+          article.setAttribute("aria-label", (i + 1) + " of " + data.length);
+          article.dataset.i = i;
+          article.innerHTML =
+            '<img class="card__image" src="' + c.img + '" alt="" loading="lazy" />' +
+            '<div class="card__body">' +
+              '<p class="card__date">' + c.tag + '</p>' +
+              '<div class="card__title-row">' +
+                '<svg class="card__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12l5 5L20 6" /></svg>' +
+                '<p class="card__title">' + c.title + '</p>' +
+              '</div>' +
+            '</div>';
+          article.addEventListener("click", function () { go(i); });
+          track.appendChild(article);
+
+          var dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "carousel__dot";
+          dot.setAttribute("aria-label", "Go to slide " + (i + 1));
+          dot.dataset.i = i;
+          dot.addEventListener("click", function () { go(i); });
+          dotsEl.appendChild(dot);
         });
-        prev.disabled = i === 0;
-        next.disabled = i === max;
+
+        cards = track.querySelectorAll(".card");
+        dots = dotsEl.querySelectorAll(".carousel__dot");
+
+        // Center the middle card by default
+        active = Math.floor((slideCount - 1) / 2);
+
+        // Recompute layout once the new images load
+        track.querySelectorAll("img").forEach(function (img) {
+          img.addEventListener("load", layout);
+        });
+
+        layout();
       }
 
-      prev.addEventListener("click", function () { go(i - 1); });
-      next.addEventListener("click", function () { go(i + 1); });
-      dots.forEach(function (d) {
-        d.addEventListener("click", function () { go(parseInt(d.dataset.i, 10)); });
-      });
+      function step() {
+        if (!cards[0]) return 0;
+        var gap = parseFloat(getComputedStyle(track).gap) || 0;
+        return cards[0].offsetWidth + gap;
+      }
 
-      // Keyboard: ←/→ when carousel is focused or hovered
+      function layout() {
+        if (!cards[0]) return;
+        var s = step();
+        var cardW = cards[0].offsetWidth;
+        var vpW = viewport.offsetWidth;
+        var offset = (vpW / 2) - (cardW / 2) - (active * s);
+        track.style.transform = "translateX(" + offset + "px)";
+
+        cards.forEach(function (c, i) {
+          c.classList.toggle("is-active", i === active);
+          c.classList.toggle("is-adjacent", Math.abs(i - active) === 1);
+          c.setAttribute("aria-hidden", i === active ? "false" : "true");
+        });
+        dots.forEach(function (d, i) {
+          d.classList.toggle("is-active", i === active);
+          d.setAttribute("aria-current", i === active ? "true" : "false");
+        });
+        if (live && cards[active]) {
+          var titleEl = cards[active].querySelector(".card__title");
+          var titleText = titleEl ? titleEl.textContent : "";
+          live.textContent = "Slide " + (active + 1) + " of " + cards.length + ": " + titleText;
+        }
+      }
+
+      function go(n) {
+        active = Math.max(0, Math.min(slideCount - 1, n));
+        prevBtn.disabled = active === 0;
+        nextBtn.disabled = active === slideCount - 1;
+        layout();
+      }
+
+      function setCount(n) {
+        slideCount = Math.max(0, Math.min(ALL_CARDS.length, n));
+        if (slideCount === 0) {
+          block.hidden = true;
+        } else {
+          block.hidden = false;
+          build();
+          prevBtn.disabled = active === 0;
+          nextBtn.disabled = active === slideCount - 1;
+        }
+        slideOptions.forEach(function (opt) {
+          var on = parseInt(opt.dataset.count, 10) === slideCount;
+          opt.classList.toggle("is-active", on);
+          opt.setAttribute("aria-checked", on ? "true" : "false");
+        });
+      }
+
+      function setViewport(v) {
+        panel.dataset.viewport = v;
+        viewportOptions.forEach(function (opt) {
+          var on = opt.dataset.viewport === v;
+          opt.classList.toggle("is-active", on);
+          opt.setAttribute("aria-checked", on ? "true" : "false");
+        });
+        layout();
+      }
+
+      slideOptions.forEach(function (opt) {
+        opt.addEventListener("click", function () {
+          setCount(parseInt(opt.dataset.count, 10));
+        });
+      });
+      viewportOptions.forEach(function (opt) {
+        opt.addEventListener("click", function () {
+          setViewport(opt.dataset.viewport);
+        });
+      });
+      prevBtn.addEventListener("click", function () { go(active - 1); });
+      nextBtn.addEventListener("click", function () { go(active + 1); });
+
+      // Keyboard nav
+      carousel.tabIndex = 0;
       carousel.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowLeft") { go(i - 1); e.preventDefault(); }
-        if (e.key === "ArrowRight") { go(i + 1); e.preventDefault(); }
+        if (e.key === "ArrowLeft")  { go(active - 1); e.preventDefault(); }
+        if (e.key === "ArrowRight") { go(active + 1); e.preventDefault(); }
       });
 
-      go(0);
+      // ── Pointer drag (mouse + touch) ─────────────────────────────
+      var drag = null;
+
+      function baseOffset(idx) {
+        var s = step();
+        var cardW = cards[0] ? cards[0].offsetWidth : 0;
+        return (viewport.offsetWidth / 2) - (cardW / 2) - (idx * s);
+      }
+
+      track.addEventListener("pointerdown", function (e) {
+        if (e.button !== undefined && e.button !== 0) return;
+        drag = {
+          startX: e.clientX,
+          startActive: active,
+          base: baseOffset(active),
+          moved: false,
+          pointerId: e.pointerId
+        };
+        track.classList.add("is-dragging");
+        try { track.setPointerCapture(e.pointerId); } catch (_) {}
+      });
+
+      track.addEventListener("pointermove", function (e) {
+        if (!drag) return;
+        var dx = e.clientX - drag.startX;
+        if (Math.abs(dx) > 4) drag.moved = true;
+        track.style.transform = "translateX(" + (drag.base + dx) + "px)";
+      });
+
+      function endDrag(e) {
+        if (!drag) return;
+        var dx = e.clientX - drag.startX;
+        var s = step() || 1;
+        // Snap: drag past ~30% of a card width to advance one slide
+        var raw = -dx / s;
+        var shift = Math.abs(raw) < 0.3 ? 0 : (raw > 0 ? Math.ceil(raw - 0.3) : Math.floor(raw + 0.3));
+        var nextActive = drag.startActive + shift;
+        var wasMoved = drag.moved;
+        track.classList.remove("is-dragging");
+        try { track.releasePointerCapture(drag.pointerId); } catch (_) {}
+        drag = null;
+        go(nextActive);
+        if (wasMoved) {
+          var swallow = function (ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            track.removeEventListener("click", swallow, true);
+          };
+          track.addEventListener("click", swallow, true);
+        }
+      }
+
+      track.addEventListener("pointerup", endDrag);
+      track.addEventListener("pointercancel", endDrag);
+
+      window.addEventListener("resize", layout);
+
+      setCount(slideCount);
     })();
   </script>
 </body>
